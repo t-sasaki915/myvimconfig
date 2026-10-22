@@ -158,6 +158,7 @@ endif
 " Start: HTML Settings
 
 " npm install -g vscode-langservers-extracted
+" Set 'snippetSupport': v:true in ~/.vim/plugged/vim-lsp/autoload/lsp.vim
 if executable('vscode-html-language-server')
     augroup vim_lsp_html
         autocmd!
@@ -167,6 +168,8 @@ if executable('vscode-html-language-server')
                     \ 'allowlist': ['html'],
                     \ })
     augroup END
+
+    autocmd FileType html setlocal omnifunc=lsp#complete
 endif
 
 " End: HTML Settings
@@ -174,6 +177,7 @@ endif
 " Start: CSS Settings
 
 " npm install -g vscode-langservers-extracted
+" Set 'snippetSupport': v:true in ~/.vim/plugged/vim-lsp/autoload/lsp.vim
 if executable('vscode-css-language-server')
     augroup vim_lsp_css
         autocmd!
@@ -183,6 +187,8 @@ if executable('vscode-css-language-server')
                     \ 'allowlist': ['css'],
                     \ })
     augroup END
+
+    autocmd FileType css setlocal omnifunc=lsp#complete
 endif
 
 " End: CSS Settings
