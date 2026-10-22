@@ -147,7 +147,7 @@ endif
 
 " Start: JavaScript Settings
 
-" npm install -g typescript typescript-language-server
+" npm install -g typescript@6 typescript-language-server
 if executable('typescript-language-server')
     augroup vim_lsp_javascript
         autocmd!
