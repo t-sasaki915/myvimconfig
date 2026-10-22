@@ -121,7 +121,7 @@ endif
 
 " Start: C Settings
 
-" apt-get install clangd
+" Use clangd
 if executable('clangd')
     augroup vim_lsp_clangd
         autocmd!
