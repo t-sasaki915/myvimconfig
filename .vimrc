@@ -60,8 +60,12 @@ if has('persistent_undo')
 	endif
 endif
 
+" npm config set prefix "$HOME/.local"
+" export PATH="$HOME/.local/bin:$PATH"
+
 " Start: Python Settings
 
+" npm install -g pyright
 if executable('pyright-langserver')
     au User lsp_setup call lsp#register_server({
                 \ 'name': 'pyright',
@@ -82,6 +86,8 @@ endif
 
 " Start: LaTeX Settings
 
+" curl https://tex.org.uk/support/latexmk/latexmk.pl -o ~/.local/bin/latexmk &&
+" chmod +x ~/.local/bin/latexmk
 if executable('latexmk')
     au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
                 \ 'name': 'vimtex',
@@ -97,6 +103,7 @@ endif
 
 " Start: Haskell Settings
 
+" Use ghcup
 if executable('haskell-language-server-wrapper')
     augroup vim_lsp_haskell
         autocmd!
@@ -118,6 +125,7 @@ endif
 
 " Start: C Settings
 
+" apt-get install clangd
 if executable('clangd')
     augroup vim_lsp_clangd
         autocmd!
@@ -136,4 +144,26 @@ if executable('clangd')
 endif
 
 " End: C Settings
+
+" Start: JavaScript Settings
+
+" npm install -g typescript typescript-language-server
+if executable('typescript-language-server')
+    augroup vim_lsp_javascript
+        autocmd!
+        autocmd User lsp_setup call lsp#register_server({
+                    \ 'name': 'typescript-language-server',
+                    \ 'cmd': {server_info -> ['typescript-language-server', '--stdio']},
+                    \ 'allowlist': ['javascript'],
+                    \ })
+    augroup END
+
+    autocmd FileType javascript setlocal omnifunc=lsp#complete
+
+    autocmd FileType javascript nnoremap <buffer> gd <Plug>(lsp-definition)
+    autocmd FileType javascript nnoremap <buffer> gh <Plug>(lsp-hover)
+    autocmd FileType javascript nnoremap <buffer> gr <Plug>(lsp-references)
+endif
+
+" End: JavaScript Settings
 
