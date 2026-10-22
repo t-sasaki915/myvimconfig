@@ -63,26 +63,9 @@ endif
 " npm config set prefix "$HOME/.local"
 " export PATH="$HOME/.local/bin:$PATH"
 
-" Start: Python Settings
-
-" npm install -g pyright
-if executable('pyright-langserver')
-    au User lsp_setup call lsp#register_server({
-                \ 'name': 'pyright',
-                \ 'cmd': {server_info->['pyright-langserver', '--stdio']},
-                \ 'allowlist': ['python'],
-                \ 'root_uri': {server_info->lsp#utils#path_to_uri(getcwd())},
-                \ 'initialization_options': {},
-                \ })
-
-    autocmd FileType python setlocal omnifunc=lsp#complete
-
-    autocmd FileType python nnoremap <buffer> gd <Plug>(lsp-definition)
-    autocmd FileType python nnoremap <buffer> gh <Plug>(lsp-hover)
-    autocmd FileType python nnoremap <buffer> gr <Plug>(lsp-references)
-endif
-
-" End: Python Settings
+nnoremap <buffer> gd <Plug>(lsp-definition)
+nnoremap <buffer> gh <Plug>(lsp-hover)
+nnoremap <buffer> gr <Plug>(lsp-references)
 
 " Start: LaTeX Settings
 
@@ -101,6 +84,23 @@ endif
 
 " End: LaTeX Settings
 
+" Start: Python Settings
+
+" npm install -g pyright
+if executable('pyright-langserver')
+    au User lsp_setup call lsp#register_server({
+                \ 'name': 'pyright',
+                \ 'cmd': {server_info->['pyright-langserver', '--stdio']},
+                \ 'allowlist': ['python'],
+                \ 'root_uri': {server_info->lsp#utils#path_to_uri(getcwd())},
+                \ 'initialization_options': {},
+                \ })
+
+    autocmd FileType python setlocal omnifunc=lsp#complete
+endif
+
+" End: Python Settings
+
 " Start: Haskell Settings
 
 " Use ghcup
@@ -115,10 +115,6 @@ if executable('haskell-language-server-wrapper')
     augroup END
 
     autocmd FileType haskell setlocal omnifunc=lsp#complete
-
-    autocmd FileType haskell nnoremap <buffer> gd <Plug>(lsp-definition)
-    autocmd FileType haskell nnoremap <buffer> gh <Plug>(lsp-hover)
-    autocmd FileType haskell nnoremap <buffer> gr <Plug>(lsp-references)
 endif
 
 " End: Haskell Settings
@@ -137,10 +133,6 @@ if executable('clangd')
     augroup END
 
     autocmd FileType c setlocal omnifunc=lsp#complete
-
-    autocmd FileType c nnoremap <buffer> gd <Plug>(lsp-definition)
-    autocmd FileType c nnoremap <buffer> gh <Plug>(lsp-hover)
-    autocmd FileType c nnoremap <buffer> gr <Plug>(lsp-references)
 endif
 
 " End: C Settings
@@ -159,11 +151,9 @@ if executable('typescript-language-server')
     augroup END
 
     autocmd FileType javascript setlocal omnifunc=lsp#complete
-
-    autocmd FileType javascript nnoremap <buffer> gd <Plug>(lsp-definition)
-    autocmd FileType javascript nnoremap <buffer> gh <Plug>(lsp-hover)
-    autocmd FileType javascript nnoremap <buffer> gr <Plug>(lsp-references)
 endif
 
 " End: JavaScript Settings
+
+
 
