@@ -155,5 +155,35 @@ endif
 
 " End: JavaScript Settings
 
+" Start: HTML Settings
 
+" npm install -g vscode-langservers-extracted
+if executable('vscode-html-language-server')
+    augroup vim_lsp_html
+        autocmd!
+        autocmd User lsp_setup call lsp#register_server({
+                    \ 'name': 'html-language-server',
+                    \ 'cmd': {server_info -> ['vscode-html-language-server', '--stdio']},
+                    \ 'allowlist': ['html'],
+                    \ })
+    augroup END
+endif
+
+" End: HTML Settings
+
+" Start: CSS Settings
+
+" npm install -g vscode-langservers-extracted
+if executable('vscode-css-language-server')
+    augroup vim_lsp_css
+        autocmd!
+        autocmd User lsp_setup call lsp#register_server({
+                    \ 'name': 'css-language-server',
+                    \ 'cmd': {server_info -> ['vscode-css-language-server', '--stdio']},
+                    \ 'allowlist': ['css'],
+                    \ })
+    augroup END
+endif
+
+" End: CSS Settings
 
