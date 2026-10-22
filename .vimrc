@@ -66,6 +66,7 @@ endif
 nnoremap <buffer> gd <Plug>(lsp-definition)
 nnoremap <buffer> gh <Plug>(lsp-hover)
 nnoremap <buffer> gr <Plug>(lsp-references)
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 
 " Start: LaTeX Settings
 
