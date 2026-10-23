@@ -60,6 +60,8 @@ if has('persistent_undo')
 	endif
 endif
 
+command! Dir execute 'edit %:p:h'
+
 " npm config set prefix "$HOME/.local"
 " export PATH="$HOME/.local/bin:$PATH"
 
