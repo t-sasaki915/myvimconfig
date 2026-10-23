@@ -71,7 +71,6 @@ function! TermHere() abort
         let l = expand('$HOME')
     endif
 
-    let l = expand('%:p')
     call term_start(['bash', '-i'], {
                 \ 'curwin': 1,
                 \ 'cwd': l,
