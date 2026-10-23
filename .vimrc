@@ -61,6 +61,7 @@ if has('persistent_undo')
 endif
 
 command! Dir execute 'edit %:p:h'
+command! -nargs=1 DirEdit execute 'edit %:p:h/' . fnameescape(<q-args>)
 
 " npm config set prefix "$HOME/.local"
 " export PATH="$HOME/.local/bin:$PATH"
