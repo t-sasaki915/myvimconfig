@@ -69,8 +69,8 @@ function! TermHere() abort
                 \ })
 endfunction
 
-command! Dir execute 'edit %:p:h'
-command! -nargs=1 DirEdit execute 'edit %:p:h/' . fnameescape(<q-args>)
+command! -bang Dir execute 'edit<bang> %:p:h'
+command! -nargs=1 -bang DirEdit execute 'edit<bang> %:p:h/' . fnameescape(<q-args>)
 command! TermHere call TermHere()
 
 tnoremap <Esc> <C-\><C-n>
