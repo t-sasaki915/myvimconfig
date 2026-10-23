@@ -61,6 +61,16 @@ if has('persistent_undo')
 endif
 
 function! TermHere() abort
+    if empty(bufname('%'))
+        let l = expand('$HOME')
+    else
+        let l = expand('%:p')
+    endif
+
+    if !isdirectory(l)
+        let l = expand('$HOME')
+    endif
+
     let l = expand('%:p')
     call term_start(['bash', '-i'], {
                 \ 'curwin': 1,
