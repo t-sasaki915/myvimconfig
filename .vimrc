@@ -60,8 +60,20 @@ if has('persistent_undo')
 	endif
 endif
 
+function! TermHere() abort
+    let l = expand('%:p')
+    call term_start(['bash', '-i'], {
+                \ 'curwin': 1,
+                \ 'cwd': l,
+                \ 'term_name': 'Bash',
+                \ })
+endfunction
+
 command! Dir execute 'edit %:p:h'
 command! -nargs=1 DirEdit execute 'edit %:p:h/' . fnameescape(<q-args>)
+command! TermHere call TermHere()
+
+tnoremap <Esc> <C-\><C-n>
 
 " npm config set prefix "$HOME/.local"
 " export PATH="$HOME/.local/bin:$PATH"
