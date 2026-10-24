@@ -31,6 +31,7 @@ set shiftround
 set wrap
 set linebreak
 set textwidth=0
+autocmd FileType * set colorcolumn=0
 highlight ColorColumn ctermbg=238 guibg=#444444
 
 set incsearch
