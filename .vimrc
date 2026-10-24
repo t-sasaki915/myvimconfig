@@ -64,7 +64,7 @@ function! TermHere() abort
     if empty(bufname('%'))
         let l = expand('$HOME')
     else
-        let l = expand('%:p')
+        let l = expand('%:p:h')
     endif
 
     if !isdirectory(l)
