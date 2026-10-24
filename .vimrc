@@ -31,6 +31,8 @@ set shiftround
 set wrap
 set linebreak
 set textwidth=0
+set colorcolumn=100
+highlight ColorColumn ctermbg=238 guibg=#444444
 
 set incsearch
 set hlsearch
