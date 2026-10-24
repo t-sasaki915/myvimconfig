@@ -31,7 +31,6 @@ set shiftround
 set wrap
 set linebreak
 set textwidth=0
-set colorcolumn=100
 highlight ColorColumn ctermbg=238 guibg=#444444
 
 set incsearch
@@ -113,6 +112,8 @@ if executable('latexmk')
     if executable('zathura')
         let g:vimtex_view_method = 'zathura'
     endif
+
+    autocmd FileType tex set colorcolumn=100
 endif
 
 " End: LaTeX Settings
@@ -130,6 +131,8 @@ if executable('pyright-langserver')
                 \ })
 
     autocmd FileType python setlocal omnifunc=lsp#complete
+
+    autocmd FileType python set colorcolumn=100
 endif
 
 " End: Python Settings
@@ -148,6 +151,8 @@ if executable('haskell-language-server-wrapper')
     augroup END
 
     autocmd FileType haskell setlocal omnifunc=lsp#complete
+
+    autocmd FileType haskell set colorcolumn=100
 endif
 
 " End: Haskell Settings
@@ -161,11 +166,15 @@ if executable('clangd')
         autocmd User lsp_setup call lsp#register_server({
                     \ 'name': 'clangd',
                     \ 'cmd': {server_info -> ['clangd']},
-                    \ 'allowlist': ['c'],
+                    \ 'allowlist': ['c', 'cpp'],
                     \ })
     augroup END
 
     autocmd FileType c setlocal omnifunc=lsp#complete
+    autocmd FileType cpp setlocal omnifunc=lsp#complete
+
+    autocmd FileType c set colorcolumn=100
+    autocmd FileType cpp set colorcolumn=100
 endif
 
 " End: C Settings
@@ -184,6 +193,8 @@ if executable('typescript-language-server')
     augroup END
 
     autocmd FileType javascript setlocal omnifunc=lsp#complete
+
+    autocmd FileType javascript set colorcolumn=100
 endif
 
 " End: JavaScript Settings
@@ -203,6 +214,8 @@ if executable('vscode-html-language-server')
     augroup END
 
     autocmd FileType html setlocal omnifunc=lsp#complete
+
+    autocmd FileType html set colorcolumn=100
 endif
 
 " End: HTML Settings
@@ -222,6 +235,8 @@ if executable('vscode-css-language-server')
     augroup END
 
     autocmd FileType css setlocal omnifunc=lsp#complete
+
+    autocmd FileType css set colorcolumn=100
 endif
 
 " End: CSS Settings
