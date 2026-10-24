@@ -28,7 +28,9 @@ set shiftwidth=4
 set softtabstop=4
 set shiftround
 
-set textwidth=80
+set wrap
+set linebreak
+set textwidth=0
 
 set incsearch
 set hlsearch
