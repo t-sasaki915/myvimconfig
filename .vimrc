@@ -85,6 +85,7 @@ endfunction
 command! -bang Dir execute 'edit<bang> %:p:h'
 command! -nargs=1 -bang DirEdit execute 'edit<bang> %:p:h/' . fnameescape(<q-args>)
 command! TermHere call TermHere()
+command! Home execute 'tabnew $HOME'
 
 tnoremap <Esc> <C-\><C-n>
 
