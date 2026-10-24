@@ -92,9 +92,6 @@ tnoremap <Esc> <C-\><C-n>
 " npm config set prefix "$HOME/.local"
 " export PATH="$HOME/.local/bin:$PATH"
 
-nnoremap <buffer> gd <Plug>(lsp-definition)
-nnoremap <buffer> gh <Plug>(lsp-hover)
-nnoremap <buffer> gr <Plug>(lsp-references)
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 
 " Start: LaTeX Settings
@@ -116,6 +113,10 @@ if executable('latexmk')
     endif
 
     autocmd FileType tex set colorcolumn=100
+
+    autocmd FileType tex nnoremap <buffer> gd :LspDefinition<CR>
+    autocmd FileType tex nnoremap <buffer> gh :LspHover<CR>
+    autocmd FileType tex nnoremap <buffer> gr :LspReferences<CR>
 endif
 
 " End: LaTeX Settings
@@ -135,6 +136,10 @@ if executable('pyright-langserver')
     autocmd FileType python setlocal omnifunc=lsp#complete
 
     autocmd FileType python set colorcolumn=100
+
+    autocmd FileType python nnoremap <buffer> gd :LspDefinition<CR>
+    autocmd FileType python nnoremap <buffer> gh :LspHover<CR>
+    autocmd FileType python nnoremap <buffer> gr :LspReferences<CR>
 endif
 
 " End: Python Settings
@@ -149,12 +154,22 @@ if executable('haskell-language-server-wrapper')
                     \ 'name': 'haskell-language-server',
                     \ 'cmd': {server_info -> ['haskell-language-server-wrapper', '--lsp']},
                     \ 'allowlist': ['haskell'],
+                    \ 'root_uri': {server_info -> lsp#utils#path_to_uri(
+                    \     lsp#utils#find_nearest_parent_file_directory(
+                    \         lsp#utils#get_buffer_path(),
+                    \         ['cabal.project', 'stack.yaml', 'hie.yaml', '.git']
+                    \     )
+                    \ )},
                     \ })
     augroup END
 
     autocmd FileType haskell setlocal omnifunc=lsp#complete
 
     autocmd FileType haskell set colorcolumn=100
+
+    autocmd FileType haskell nnoremap <buffer> gd :LspDefinition<CR>
+    autocmd FileType haskell nnoremap <buffer> gh :LspHover<CR>
+    autocmd FileType haskell nnoremap <buffer> gr :LspReferences<CR>
 endif
 
 " End: Haskell Settings
@@ -177,6 +192,13 @@ if executable('clangd')
 
     autocmd FileType c set colorcolumn=100
     autocmd FileType cpp set colorcolumn=100
+
+    autocmd FileType c nnoremap <buffer> gd :LspDefinition<CR>
+    autocmd FileType c nnoremap <buffer> gh :LspHover<CR>
+    autocmd FileType c nnoremap <buffer> gr :LspReferences<CR>
+    autocmd FileType cpp nnoremap <buffer> gd :LspDefinition<CR>
+    autocmd FileType cpp nnoremap <buffer> gh :LspHover<CR>
+    autocmd FileType cpp nnoremap <buffer> gr :LspReferences<CR>
 endif
 
 " End: C Settings
@@ -197,6 +219,10 @@ if executable('typescript-language-server')
     autocmd FileType javascript setlocal omnifunc=lsp#complete
 
     autocmd FileType javascript set colorcolumn=100
+
+    autocmd FileType javascript nnoremap <buffer> gd :LspDefinition<CR>
+    autocmd FileType javascript nnoremap <buffer> gh :LspHover<CR>
+    autocmd FileType javascript nnoremap <buffer> gr :LspReferences<CR>
 endif
 
 " End: JavaScript Settings
@@ -218,6 +244,10 @@ if executable('vscode-html-language-server')
     autocmd FileType html setlocal omnifunc=lsp#complete
 
     autocmd FileType html set colorcolumn=100
+
+    autocmd FileType html nnoremap <buffer> gd :LspDefinition<CR>
+    autocmd FileType html nnoremap <buffer> gh :LspHover<CR>
+    autocmd FileType html nnoremap <buffer> gr :LspReferences<CR>
 endif
 
 " End: HTML Settings
@@ -239,6 +269,10 @@ if executable('vscode-css-language-server')
     autocmd FileType css setlocal omnifunc=lsp#complete
 
     autocmd FileType css set colorcolumn=100
+
+    autocmd FileType css nnoremap <buffer> gd :LspDefinition<CR>
+    autocmd FileType css nnoremap <buffer> gh :LspHover<CR>
+    autocmd FileType css nnoremap <buffer> gr :LspReferences<CR>
 endif
 
 " End: CSS Settings
