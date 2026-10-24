@@ -107,6 +107,10 @@ if executable('latexmk')
                 \     'show_source_kind': 1
                 \ }
                 \ }))
+
+    if executable('zathura')
+        let g:vimtex_view_method = 'zathura'
+    endif
 endif
 
 " End: LaTeX Settings
