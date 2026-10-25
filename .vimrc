@@ -129,6 +129,16 @@ if executable('latexmk')
         let g:vimtex_view_method = 'zathura'
     endif
 
+    if has('win32') && executable('SumatraPDF.exe')
+        let s:sumatraPath = trim(split(system('where SumatraPDF.exe'), "\n")[0])
+
+        if v:shell_error == 0 && filereadable(s:sumatraPath)
+            let g:vimtex_view_method = 'general'
+            let g:vimtex_view_general_viewer = s:sumatraPath
+            let g:vimtex_view_general_options = '-reuse-instance -forward-search @tex @line @pdf'
+        endif
+    endif
+
     autocmd FileType tex set colorcolumn=100
 endif
 
