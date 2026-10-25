@@ -75,11 +75,20 @@ function! TermHere() abort
         let l = expand('$HOME')
     endif
 
-    call term_start(['bash', '-i'], {
-                \ 'curwin': 1,
-                \ 'cwd': l,
-                \ 'term_name': 'Bash',
-                \ })
+    if has('win32')
+        let l:shell = executable('pwsh') ? 'pwsh' : 'powershell'
+        call term_start([l:shell, '-NoLogo', '-NoExit'], {
+                    \ 'curwin': 1,
+                    \ 'cwd': l,
+                    \ 'term_name': 'PowerShell',
+                    \ })
+    else
+        call term_start(['bash', '-i'], {
+                    \ 'curwin': 1,
+                    \ 'cwd': l,
+                    \ 'term_name': 'Bash',
+                    \ })
+    endif
 endfunction
 
 command! -bang Dir execute 'edit<bang> %:p:h'
