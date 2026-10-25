@@ -94,6 +94,14 @@ tnoremap <Esc> <C-\><C-n>
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 
+function! LspNodeExecutable(name) abort
+    if has('win32')
+        return a:name . '.cmd'
+    endif
+
+    return a:name
+endfunction
+
 " Start: LaTeX Settings
 
 " curl https://tex.org.uk/support/latexmk/latexmk.pl -o ~/.local/bin/latexmk &&
@@ -113,10 +121,6 @@ if executable('latexmk')
     endif
 
     autocmd FileType tex set colorcolumn=100
-
-    autocmd FileType tex nnoremap <buffer> gd :LspDefinition<CR>
-    autocmd FileType tex nnoremap <buffer> gh :LspHover<CR>
-    autocmd FileType tex nnoremap <buffer> gr :LspReferences<CR>
 endif
 
 " End: LaTeX Settings
@@ -127,7 +131,7 @@ endif
 if executable('pyright-langserver')
     au User lsp_setup call lsp#register_server({
                 \ 'name': 'pyright',
-                \ 'cmd': {server_info->['pyright-langserver', '--stdio']},
+                \ 'cmd': {server_info->[LspNodeExecutable('pyright-langserver'), '--stdio']},
                 \ 'allowlist': ['python'],
                 \ 'root_uri': {server_info->lsp#utils#path_to_uri(getcwd())},
                 \ 'initialization_options': {},
@@ -211,7 +215,7 @@ if executable('typescript-language-server')
         autocmd!
         autocmd User lsp_setup call lsp#register_server({
                     \ 'name': 'typescript-language-server',
-                    \ 'cmd': {server_info -> ['typescript-language-server', '--stdio']},
+                    \ 'cmd': {server_info -> [LspNodeExecutable('typescript-language-server'), '--stdio']},
                     \ 'allowlist': ['javascript'],
                     \ })
     augroup END
@@ -236,7 +240,7 @@ if executable('vscode-html-language-server')
         autocmd!
         autocmd User lsp_setup call lsp#register_server({
                     \ 'name': 'html-language-server',
-                    \ 'cmd': {server_info -> ['vscode-html-language-server', '--stdio']},
+                    \ 'cmd': {server_info -> [LspNodeExecutable('vscode-html-language-server'), '--stdio']},
                     \ 'allowlist': ['html'],
                     \ })
     augroup END
@@ -261,7 +265,7 @@ if executable('vscode-css-language-server')
         autocmd!
         autocmd User lsp_setup call lsp#register_server({
                     \ 'name': 'css-language-server',
-                    \ 'cmd': {server_info -> ['vscode-css-language-server', '--stdio']},
+                    \ 'cmd': {server_info -> [LspNodeExecutable('vscode-css-language-server'), '--stdio']},
                     \ 'allowlist': ['css'],
                     \ })
     augroup END
@@ -276,4 +280,3 @@ if executable('vscode-css-language-server')
 endif
 
 " End: CSS Settings
-
