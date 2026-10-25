@@ -116,7 +116,7 @@ endfunction
 " curl https://tex.org.uk/support/latexmk/latexmk.pl -o ~/.local/bin/latexmk &&
 " chmod +x ~/.local/bin/latexmk
 if executable('latexmk')
-    au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
+    autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
                 \ 'name': 'vimtex',
                 \ 'allowlist': ['tex'],
                 \ 'completor': function('asyncomplete#sources#omni#completor'),
@@ -148,7 +148,7 @@ endif
 
 " npm install -g pyright
 if executable('pyright-langserver')
-    au User lsp_setup call lsp#register_server({
+    autocmd User lsp_setup call lsp#register_server({
                 \ 'name': 'pyright',
                 \ 'cmd': {server_info->[LspNodeExecutable('pyright-langserver'), '--stdio']},
                 \ 'allowlist': ['python'],
@@ -171,20 +171,17 @@ endif
 
 " Use ghcup
 if executable('haskell-language-server-wrapper')
-    augroup vim_lsp_haskell
-        autocmd!
-        autocmd User lsp_setup call lsp#register_server({
-                    \ 'name': 'haskell-language-server',
-                    \ 'cmd': {server_info -> ['haskell-language-server-wrapper', '--lsp']},
-                    \ 'allowlist': ['haskell'],
-                    \ 'root_uri': {server_info -> lsp#utils#path_to_uri(
-                    \     lsp#utils#find_nearest_parent_file_directory(
-                    \         lsp#utils#get_buffer_path(),
-                    \         ['cabal.project', 'stack.yaml', 'hie.yaml', '.git']
-                    \     )
-                    \ )},
-                    \ })
-    augroup END
+    autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'haskell-language-server',
+                \ 'cmd': {server_info -> ['haskell-language-server-wrapper', '--lsp']},
+                \ 'allowlist': ['haskell'],
+                \ 'root_uri': {server_info -> lsp#utils#path_to_uri(
+                \     lsp#utils#find_nearest_parent_file_directory(
+                \         lsp#utils#get_buffer_path(),
+                \         ['cabal.project', 'stack.yaml', 'hie.yaml', '.git']
+                \     )
+                \ )},
+                \ })
 
     autocmd FileType haskell setlocal omnifunc=lsp#complete
 
@@ -201,14 +198,11 @@ endif
 
 " Use clangd
 if executable('clangd')
-    augroup vim_lsp_clangd
-        autocmd!
-        autocmd User lsp_setup call lsp#register_server({
-                    \ 'name': 'clangd',
-                    \ 'cmd': {server_info -> ['clangd']},
-                    \ 'allowlist': ['c', 'cpp'],
-                    \ })
-    augroup END
+    autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'clangd',
+                \ 'cmd': {server_info -> ['clangd']},
+                \ 'allowlist': ['c', 'cpp'],
+                \ })
 
     autocmd FileType c setlocal omnifunc=lsp#complete
     autocmd FileType cpp setlocal omnifunc=lsp#complete
@@ -230,14 +224,11 @@ endif
 
 " npm install -g typescript@6 typescript-language-server
 if executable('typescript-language-server')
-    augroup vim_lsp_javascript
-        autocmd!
-        autocmd User lsp_setup call lsp#register_server({
-                    \ 'name': 'typescript-language-server',
-                    \ 'cmd': {server_info -> [LspNodeExecutable('typescript-language-server'), '--stdio']},
-                    \ 'allowlist': ['javascript'],
-                    \ })
-    augroup END
+    autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'typescript-language-server',
+                \ 'cmd': {server_info -> [LspNodeExecutable('typescript-language-server'), '--stdio']},
+                \ 'allowlist': ['javascript'],
+                \ })
 
     autocmd FileType javascript setlocal omnifunc=lsp#complete
 
@@ -255,14 +246,11 @@ endif
 " npm install -g vscode-langservers-extracted
 " Set 'snippetSupport': v:true in ~/.vim/plugged/vim-lsp/autoload/lsp.vim
 if executable('vscode-html-language-server')
-    augroup vim_lsp_html
-        autocmd!
-        autocmd User lsp_setup call lsp#register_server({
-                    \ 'name': 'html-language-server',
-                    \ 'cmd': {server_info -> [LspNodeExecutable('vscode-html-language-server'), '--stdio']},
-                    \ 'allowlist': ['html'],
-                    \ })
-    augroup END
+    autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'html-language-server',
+                \ 'cmd': {server_info -> [LspNodeExecutable('vscode-html-language-server'), '--stdio']},
+                \ 'allowlist': ['html'],
+                \ })
 
     autocmd FileType html setlocal omnifunc=lsp#complete
 
@@ -280,14 +268,11 @@ endif
 " npm install -g vscode-langservers-extracted
 " Set 'snippetSupport': v:true in ~/.vim/plugged/vim-lsp/autoload/lsp.vim
 if executable('vscode-css-language-server')
-    augroup vim_lsp_css
-        autocmd!
-        autocmd User lsp_setup call lsp#register_server({
-                    \ 'name': 'css-language-server',
-                    \ 'cmd': {server_info -> [LspNodeExecutable('vscode-css-language-server'), '--stdio']},
-                    \ 'allowlist': ['css'],
-                    \ })
-    augroup END
+    autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'css-language-server',
+                \ 'cmd': {server_info -> [LspNodeExecutable('vscode-css-language-server'), '--stdio']},
+                \ 'allowlist': ['css'],
+                \ })
 
     autocmd FileType css setlocal omnifunc=lsp#complete
 
