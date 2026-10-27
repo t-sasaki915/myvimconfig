@@ -54,7 +54,11 @@ set mouse=a
 set history=1000
 
 if has('persistent_undo')
-	let s = expand('~/.vim/undo')
+    if has('win32')
+	    let s = expand('~/vimfiles/undo')
+    else
+	    let s = expand('~/.vim/undo')
+    endif
 	if !isdirectory(s)
 		call mkdir(s, 'p', 0700)
 	endif
