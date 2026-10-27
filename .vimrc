@@ -59,9 +59,11 @@ if has('persistent_undo')
     else
 	    let s = expand('~/.vim/undo')
     endif
+
 	if !isdirectory(s)
 		call mkdir(s, 'p', 0700)
 	endif
+    
 	if isdirectory(s) && filewritable(s) == 2
 		let &undodir = s
 		set undofile
