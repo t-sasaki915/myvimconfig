@@ -51,6 +51,8 @@ set wildmenu
 
 set mouse=a
 
+set clipboard=unnamedplus
+
 set history=1000
 
 if has('persistent_undo')
