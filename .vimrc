@@ -51,7 +51,9 @@ set wildmenu
 
 set mouse=a
 
-set clipboard=unnamedplus
+if has('gui_running')
+    set clipboard=unnamed
+endif
 
 set history=1000
 
