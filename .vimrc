@@ -290,3 +290,25 @@ if executable('vscode-css-language-server')
 endif
 
 " End: CSS Settings
+
+" Start: PHP Settings
+
+" Use https://github.com/jorgsowa/php-lsp
+if executable('php-lsp')
+    autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'php-language-server',
+                \ 'cmd': {server_info -> ['php-lsp']},
+                \ 'allowlist': ['php'],
+                \ })
+
+    autocmd FileType php setlocal omnifunc=lsp#complete
+
+    autocmd FileType php set colorcolumn=100
+
+    autocmd FileType php nnoremap <buffer> gd :LspDefinition<CR>
+    autocmd FileType php nnoremap <buffer> gh :LspHover<CR>
+    autocmd FileType php nnoremap <buffer> gr :LspReferences<CR>
+endif
+
+" End: PHP Settings
+
