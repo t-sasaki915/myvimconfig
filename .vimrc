@@ -147,6 +147,8 @@ endfunction
 
 " curl https://tex.org.uk/support/latexmk/latexmk.pl -o ~/.local/bin/latexmk &&
 " chmod +x ~/.local/bin/latexmk
+"
+" For word count use https://app.uio.no/ifi/texcount/download.html
 if executable('latexmk')
     autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
                 \ 'name': 'vimtex',
