@@ -176,25 +176,51 @@ if executable('latexmk')
     
     autocmd FileType tex command! WordCount execute 'VimtexCountWords'
     
-    if executable('ltex-ls-plus')
-        if has('win32')
-            let s:ltexExecName = 'ltex-ls-plus.bat'
-        else
-            let s:ltexExecName = 'ltex-ls-plus'
-        endif
+endif
 
-        autocmd User lsp_setup call lsp#register_server({
-                    \ 'name': 'ltex-ls-plus',
-                    \ 'cmd': {server_info -> [s:ltexExecName]},
-                    \ 'allowlist': ['tex', 'bib'],
-                    \ 'workspace_config': {
-                    \     'ltex': {
-                    \         'language': 'en-GB',
-                    \         'enabled': ['latex', 'tex', 'bib']
-                    \     }
-                    \ },
-                    \ })
+" Use https://github.com/ltex-plus/ltex-ls-plus/releases
+if executable('ltex-ls-plus')
+    if has('win32')
+        let s:ltexExecName = 'ltex-ls-plus.bat'
+    else
+        let s:ltexExecName = 'ltex-ls-plus'
     endif
+
+    function! s:LtexDictionaryFile() abort
+        let l:dir = expand('%:p:h')
+        let l:file = findfile('.ltex/dictionary.txt', l:dir . ';')
+
+        return l:file
+    endfunction
+
+    function! s:LtexWorkspaceConfig(...) abort
+        let l:config = {
+                    \ 'ltex': {
+                    \     'language': 'en-GB',
+                    \     'enabled': ['latex', 'tex', 'bib']
+                    \ }
+                    \ }
+        
+        let l:file = s:LtexDictionaryFile()
+
+        if !empty(l:file)
+            let l:words = readfile(l:file)
+            let l:words = filter(l:words, 'v:val !~# "^\\s*$"')
+
+            let l:config.ltex.dictionary = {
+                    \ 'en-GB': l:words
+                    \ }
+        endif
+        
+        return l:config
+    endfunction
+
+    autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'ltex-ls-plus',
+                \ 'cmd': {server_info -> [s:ltexExecName]},
+                \ 'allowlist': ['tex', 'bib'],
+                \ 'workspace_config': function('s:LtexWorkspaceConfig'),
+                \ })
 endif
 
 " End: LaTeX Settings
