@@ -108,6 +108,28 @@ command! Home execute 'tabnew $HOME'
 
 tnoremap <Esc> <C-\><C-n>
 
+autocmd ColorScheme * call s:SetLspDiagnosticColours()
+
+function! s:SetLspDiagnosticColours() abort
+    highlight LspErrorVirtualText
+                \ ctermfg=white ctermbg=darkred
+                \ guifg=#ffffff guibg=#a00000 gui=NONE
+
+    highlight LspWarningVirtualText
+                \ ctermfg=white ctermbg=darkred
+                \ guifg=#ffffff guibg=#a00000 gui=NONE
+
+    highlight LspInformationVirtualText
+                \ ctermfg=white ctermbg=darkred
+                \ guifg=#ffffff guibg=#a00000 gui=NONE
+
+    highlight LspHintVirtualText
+                \ ctermfg=white ctermbg=darkred
+                \ guifg=#ffffff guibg=#a00000 gui=NONE
+endfunction
+
+call s:SetLspDiagnosticColours()
+
 " npm config set prefix "$HOME/.local"
 " export PATH="$HOME/.local/bin:$PATH"
 
@@ -128,7 +150,7 @@ endfunction
 if executable('latexmk')
     autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
                 \ 'name': 'vimtex',
-                \ 'allowlist': ['tex'],
+                \ 'allowlist': ['tex', 'bib'],
                 \ 'completor': function('asyncomplete#sources#omni#completor'),
                 \ 'config': {
                 \     'show_source_kind': 1
@@ -150,6 +172,29 @@ if executable('latexmk')
     endif
 
     autocmd FileType tex set colorcolumn=100
+    autocmd FileType bib set colorcolumn=100
+    
+    autocmd FileType tex command! WordCount execute 'VimtexCountWords'
+    
+    if executable('ltex-ls-plus')
+        if has('win32')
+            let s:ltexExecName = 'ltex-ls-plus.bat'
+        else
+            let s:ltexExecName = 'ltex-ls-plus'
+        endif
+
+        autocmd User lsp_setup call lsp#register_server({
+                    \ 'name': 'ltex-ls-plus',
+                    \ 'cmd': {server_info -> [s:ltexExecName]},
+                    \ 'allowlist': ['tex', 'bib'],
+                    \ 'workspace_config': {
+                    \     'ltex': {
+                    \         'language': 'en-GB',
+                    \         'enabled': ['latex', 'tex', 'bib']
+                    \     }
+                    \ },
+                    \ })
+    endif
 endif
 
 " End: LaTeX Settings
