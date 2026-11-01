@@ -181,48 +181,71 @@ if executable('latexmk')
 endif
 
 " Use https://github.com/ltex-plus/ltex-ls-plus/releases
-if executable('ltex-ls-plus')
-    if has('win32')
-        let s:ltexExecName = 'ltex-ls-plus.bat'
-    else
-        let s:ltexExecName = 'ltex-ls-plus'
-    endif
-
-    function! s:LtexDictionaryFile() abort
-        let l:dir = expand('%:p:h')
-        let l:file = findfile('.ltex/dictionary.txt', l:dir . ';')
-
-        return l:file
-    endfunction
-
+if executable('ltex-ls-plus') && executable('LTeXConfigManipulator')
     function! s:LtexWorkspaceConfig(...) abort
+        let l:texfile = expand('%:p')
+
         let l:config = {
                     \ 'ltex': {
-                    \     'language': 'en-GB',
                     \     'enabled': ['latex', 'tex', 'bib']
                     \ }
                     \ }
-        
-        let l:file = s:LtexDictionaryFile()
 
-        if !empty(l:file)
-            let l:words = readfile(l:file)
-            let l:words = filter(l:words, 'v:val !~# "^\\s*$"')
-
-            let l:config.ltex.dictionary = {
-                    \ 'en-GB': l:words
-                    \ }
+        let l:language = trim(system('LTeXConfigManipulator show language --texFile ' . shellescape(l:texfile)))
+        if v:shell_error != 0 || empty(l:language)
+            let l:language = 'en-GB'
         endif
+
+        let l:config.ltex.language = l:language
         
+        let l:words = systemlist('LTeXConfigManipulator show dictionary --texFile ' . shellescape(l:texfile))
+        if v:shell_error == 0
+            call map(l:words, 'substitute(v:val, "\r$", "", "")')
+            call filter(l:words, 'v:val !~# "^\\s*$"')
+            
+            let l:config.ltex.dictionary = {
+                        \ l:language: l:words
+                        \ }
+        endif
+
         return l:config
     endfunction
 
+    function! s:LTeXCorrectWord() abort
+        let l:word = expand('<cword>')
+        if empty(l:word)
+            echo 'No word under cursor.'
+            return
+        endif
+
+        echo trim(system('LTeXConfigManipulator correctWord ' . shellescape(l:word) . ' --texFile ' . shellescape(expand('%:p'))))
+    endfunction
+
+    function! s:LTeXWrongWord() abort
+        let l:word = expand('<cword>')
+        if empty(l:word)
+            echo 'No word under cursor.'
+            return
+        endif
+
+        echo trim(system('LTeXConfigManipulator wrongWord ' . shellescape(l:word) . ' --texFile ' . shellescape(expand('%:p'))))
+    endfunction
+
+    function! s:LTeXSetLanguage(language) abort
+        echo trim(system('LTeXConfigManipulator language ' . shellescape(a:language) . ' --texFile ' . shellescape(expand('%:p'))))
+    endfunction
+
+    let s:ltexExecName = has('win32') ? 'ltex-ls-plus.bat' : 'ltex-ls-plus'
     autocmd User lsp_setup call lsp#register_server({
                 \ 'name': 'ltex-ls-plus',
                 \ 'cmd': {server_info -> [s:ltexExecName]},
                 \ 'allowlist': ['tex', 'bib'],
                 \ 'workspace_config': function('s:LtexWorkspaceConfig'),
                 \ })
+
+    command! CorrectWord call s:LTeXCorrectWord()
+    command! WrongWord call s:LTeXWrongWord()
+    command! -nargs=1 LTeXSetLanguage call s:LTeXSetLanguage(<q-args>)
 endif
 
 " End: LaTeX Settings
