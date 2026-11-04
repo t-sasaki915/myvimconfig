@@ -183,32 +183,7 @@ endif
 " Use https://github.com/ltex-plus/ltex-ls-plus/releases
 if executable('ltex-ls-plus') && executable('LTeXConfigManipulator')
     function! s:LtexWorkspaceConfig(...) abort
-        let l:texfile = expand('%:p')
-
-        let l:config = {
-                    \ 'ltex': {
-                    \     'enabled': ['latex', 'tex', 'bib']
-                    \ }
-                    \ }
-
-        let l:language = trim(system('LTeXConfigManipulator show language --texFile ' . shellescape(l:texfile)))
-        if v:shell_error != 0 || empty(l:language)
-            let l:language = 'en-GB'
-        endif
-
-        let l:config.ltex.language = l:language
-        
-        let l:words = systemlist('LTeXConfigManipulator show dictionary --texFile ' . shellescape(l:texfile))
-        if v:shell_error == 0
-            call map(l:words, 'substitute(v:val, "\r$", "", "")')
-            call filter(l:words, 'v:val !~# "^\\s*$"')
-            
-            let l:config.ltex.dictionary = {
-                        \ l:language: l:words
-                        \ }
-        endif
-
-        return l:config
+        return json_decode(system('LTeXConfigManipulator workspaceConfig --texFile ' . shellescape(expand('%:p'))))
     endfunction
 
     function! s:LTeXCorrectWord() abort
@@ -218,7 +193,7 @@ if executable('ltex-ls-plus') && executable('LTeXConfigManipulator')
             return
         endif
 
-        echo trim(system('LTeXConfigManipulator correctWord ' . shellescape(l:word) . ' --texFile ' . shellescape(expand('%:p'))))
+        echo trim(system('LTeXConfigManipulator add dictionary.currentLang ' . shellescape(l:word) . ' --texFile ' . shellescape(expand('%:p'))))
     endfunction
 
     function! s:LTeXWrongWord() abort
@@ -228,11 +203,11 @@ if executable('ltex-ls-plus') && executable('LTeXConfigManipulator')
             return
         endif
 
-        echo trim(system('LTeXConfigManipulator wrongWord ' . shellescape(l:word) . ' --texFile ' . shellescape(expand('%:p'))))
+        echo trim(system('LTeXConfigManipulator remove dictionary.currentLang ' . shellescape(l:word) . ' --texFile ' . shellescape(expand('%:p'))))
     endfunction
 
     function! s:LTeXSetLanguage(language) abort
-        echo trim(system('LTeXConfigManipulator language ' . shellescape(a:language) . ' --texFile ' . shellescape(expand('%:p'))))
+        echo trim(system('LTeXConfigManipulator set language ' . shellescape(a:language) . ' --texFile ' . shellescape(expand('%:p'))))
     endfunction
 
     let s:ltexExecName = has('win32') ? 'ltex-ls-plus.bat' : 'ltex-ls-plus'
