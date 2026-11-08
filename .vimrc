@@ -149,6 +149,8 @@ endfunction
 " chmod +x ~/.local/bin/latexmk
 "
 " For word count use https://app.uio.no/ifi/texcount/download.html
+"
+" For Windows use miktex
 if executable('latexmk')
     autocmd User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
                 \ 'name': 'vimtex',
@@ -181,6 +183,7 @@ if executable('latexmk')
 endif
 
 " Use https://github.com/ltex-plus/ltex-ls-plus/releases
+" Use https://github.com/t-sasaki915/LTeXConfigManipulator
 if executable('ltex-ls-plus') && executable('LTeXConfigManipulator')
     function! s:LtexWorkspaceConfig(...) abort
         return json_decode(system('LTeXConfigManipulator workspaceConfig --texFile ' . shellescape(expand('%:p'))))
