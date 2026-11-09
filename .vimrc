@@ -51,8 +51,31 @@ set wildmenu
 
 set mouse=a
 
+" Clipboard settings for gVIM
 if has('gui_running')
     set clipboard=unnamed
+endif
+
+" Clipboard settings for WSL
+" Install https://github.com/equalsraf/win32yank to C:\Users\Public\bin
+let s:win32yankPath = '/mnt/c/Users/Public/bin/win32yank.exe'
+if !has('win32') && executable(s:win32yankPath)
+    function! s:CopyToWindowsClipboard() abort
+        call system(s:win32yankPath . ' -i --crlf', getreg('"'))
+    endfunction
+
+    function! s:PasteFromWindowsClipboard(before) abort
+        let l:clipboard = system(s:win32yankPath . ' -o --lf')
+
+        call setreg('"', l:clipboard)
+
+        execute 'normal! ' . (a:before ? 'P' : 'p')
+    endfunction
+
+    autocmd TextYankPost * if index(['y', 'd', 'c'], v:event.operator) >= 0 | call <SID>CopyToWindowsClipboard() | endif
+
+    nnoremap <silent> p :<C-u>call <SID>PasteFromWindowsClipboard(0)<CR>
+    nnoremap <silent> P :<C-u>call <SID>PasteFromWindowsClipboard(1)<CR>
 endif
 
 set history=1000
