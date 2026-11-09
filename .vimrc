@@ -61,11 +61,11 @@ endif
 let s:win32yankPath = '/mnt/c/Users/Public/bin/win32yank.exe'
 if !has('win32') && executable(s:win32yankPath)
     function! s:CopyToWindowsClipboard() abort
-        call system(s:win32yankPath . ' -i --crlf', getreg('"'))
+        call system('cd /mnt/c && ' . s:win32yankPath . ' -i --crlf', getreg('"'))
     endfunction
 
     function! s:PasteFromWindowsClipboard(before) abort
-        let l:clipboard = system(s:win32yankPath . ' -o --lf')
+        let l:clipboard = system('cd /mnt/c && ' . s:win32yankPath . ' -o --lf')
 
         call setreg('"', l:clipboard)
 
