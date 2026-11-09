@@ -51,31 +51,50 @@ set wildmenu
 
 set mouse=a
 
-" Clipboard settings for gVIM
-if has('gui_running')
-    set clipboard=unnamed
-endif
+" Clipboard settings if +clipboard
+if has('clipboard')
+    " For gVIM on Windows
+    if has('win32') && has('gui_running')
+        set clipboard=unnamed
 
-" Clipboard settings for WSL
-" Install https://github.com/equalsraf/win32yank to C:\Users\Public\bin
-let s:win32yankPath = '/mnt/c/Users/Public/bin/win32yank.exe'
-if !has('win32') && executable(s:win32yankPath)
-    function! s:CopyToWindowsClipboard() abort
-        call system('cd /mnt/c && ' . s:win32yankPath . ' -i --crlf', getreg('"'))
-    endfunction
+    " For other platforms
+    else
+        set clipboard=unnamedplus
+    endif
 
-    function! s:PasteFromWindowsClipboard(before) abort
-        let l:clipboard = system('cd /mnt/c && ' . s:win32yankPath . ' -o --lf')
+" Clipboard settings if -clipboard
+else
+    " For WSL
+    " Install https://github.com/equalsraf/win32yank to C:\Users\Public\bin
+    if has('unix') && executable('/mnt/c/Users/Public/bin/win32yank.exe')
+        let s:copyCommand = 'cd /mnt/c && /mnt/c/Users/Public/bin/win32yank.exe -i --crlf'
+        let s:pasteCommand = 'cd /mnt/c && /mnt/c/Users/Public/bin/win32yank.exe -o --lf'
 
-        call setreg('"', l:clipboard)
+    " For Linux / Wayland
+    " Install wl-clipboard
+    elseif has('unix') && executable('wl-copy') && executable('wl-paste')
+        let s:copyCommand = 'wl-copy --type text/plain;charset=utf-8'
+        let s:pasteCommand = 'wl-paste --no-newline --type text/plain;charset=utf8'
+    endif
 
-        execute 'normal! ' . (a:before ? 'P' : 'p')
-    endfunction
+    if exists('s:copyCommand') && exists('s:pasteCommand')
+        function! s:CopyToOSClipboard() abort
+            call system(s:copyCommand, getreg('"'))
+        endfunction
+        
+        function! s:PasteFromOSClipboard(before) abort
+            let l:clipboard = system(s:pasteCommand)
+        
+            call setreg('"', l:clipboard)
+        
+            execute 'normal! ' . (a:before ? 'P' : 'p')
+        endfunction
 
-    autocmd TextYankPost * if index(['y', 'd', 'c'], v:event.operator) >= 0 | call <SID>CopyToWindowsClipboard() | endif
-
-    nnoremap <silent> p :<C-u>call <SID>PasteFromWindowsClipboard(0)<CR>
-    nnoremap <silent> P :<C-u>call <SID>PasteFromWindowsClipboard(1)<CR>
+        autocmd TextYankPost * if index(['y', 'd', 'c'], v:event.operator) >= 0 | call <SID>CopyToOSClipboard() | endif
+    
+        nnoremap <silent> p :<C-u>call <SID>PasteFromOSClipboard(0)<CR>
+        nnoremap <silent> P :<C-u>call <SID>PasteFromOSClipboard(1)<CR>
+    endif
 endif
 
 set history=1000
