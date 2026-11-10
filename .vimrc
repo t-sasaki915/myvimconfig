@@ -51,6 +51,12 @@ set wildmenu
 
 set mouse=a
 
+set guioptions-=r
+set guioptions-=R
+set guioptions-=l
+set guioptions-=L
+set guioptions-=b
+
 " Clipboard settings if +clipboard
 if has('clipboard')
     " For gVIM on Windows
